@@ -14,38 +14,77 @@ export async function generateScriptMock(input: UserInput): Promise<GeneratedScr
 
   const mood = moodLabel[input.videoMood] || input.videoMood;
 
+  const hooks = [
+    `これ、共感する人だけ見て。`,
+    `最後まで見た人だけわかる。`,
+    `正直に言っていい？`,
+    `ずっと言えなかったこと。`,
+    `1つだけ聞いて。`,
+    `これ言語化できた人、天才。`,
+  ];
+  const hook = hooks[Math.floor(Math.random() * hooks.length)];
+
+  const closings = [
+    `同じ気持ちの人、🤍`,
+    `わかる人にだけ届け。`,
+    `保存しといて。いつか効くから。`,
+    `これが本音。`,
+    `共感したらコメントで教えて。`,
+  ];
+  const closing = closings[Math.floor(Math.random() * closings.length)];
+
+  const title = `${hook.slice(0, 15)}${input.theme.slice(0, 15)}`;
+
   return {
-    title: `${input.theme.slice(0, 25)}…`,
+    title,
     script15s: [
-      `${input.theme}`,
-      `→ ${input.message}`,
-      `でも本音は…${input.innerVoice}`,
+      hook,
+      ``,
+      input.theme,
+      `→「${input.message}」`,
+      ``,
+      closing,
     ].join('\n'),
     script30s: [
-      `${input.theme}`,
+      hook,
       ``,
-      `伝えたいのは、`,
-      `「${input.message}」`,
+      input.theme,
       ``,
-      `でも本音を言うと…`,
+      `ずっと思ってたけど、`,
+      `${input.message}`,
+      ``,
+      `…でも正直`,
       `${input.innerVoice}`,
       ``,
-      `${input.targetAudience}に届け。`,
+      `${input.targetAudience}に届いてほしい。`,
+      ``,
+      closing,
     ].join('\n'),
     screenTexts: [
-      input.theme.slice(0, 25),
-      input.message.slice(0, 25),
-      `本音：${input.innerVoice.slice(0, 20)}`,
+      hook,
+      input.theme.length > 20 ? input.theme.slice(0, 20) + '…' : input.theme,
+      input.message.length > 20 ? input.message.slice(0, 20) + '…' : input.message,
+      input.innerVoice.length > 18 ? input.innerVoice.slice(0, 18) + '…' : input.innerVoice,
+      closing,
     ],
-    caption: `${input.theme}\n${input.message}\n#${mood}な話`,
+    caption: [
+      hook,
+      ``,
+      input.theme,
+      ``,
+      `${input.message}`,
+      ``,
+      `#${mood} #内省 #本音`,
+    ].join('\n'),
     hashtags: [
       `#${mood}`,
-      '#内省',
-      '#日常vlog',
+      '#本音',
+      '#共感したらコメント',
+      '#自分語り',
       '#shorts',
       '#reels',
-      '#tiktok',
       '#バズりたい',
+      '#保存推奨',
     ],
   };
 }

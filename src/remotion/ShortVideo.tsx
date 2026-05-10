@@ -5,21 +5,23 @@ import {
   useCurrentFrame,
   useVideoConfig,
   interpolate,
-  spring,
   Easing,
 } from 'remotion';
 
 const FONT_FAMILY =
   '-apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif';
 
-const AnimatedSubtitle: React.FC<{ text: string }> = ({ text }) => {
+const FadeInText: React.FC<{ text: string; fontSize?: number }> = ({
+  text,
+  fontSize = 52,
+}) => {
   const frame = useCurrentFrame();
 
-  const opacity = interpolate(frame, [0, 15], [0, 1], {
+  const opacity = interpolate(frame, [0, 12], [0, 1], {
     extrapolateRight: 'clamp',
   });
 
-  const translateY = interpolate(frame, [0, 15], [40, 0], {
+  const translateY = interpolate(frame, [0, 12], [30, 0], {
     extrapolateRight: 'clamp',
     easing: Easing.out(Easing.cubic),
   });
@@ -29,32 +31,25 @@ const AnimatedSubtitle: React.FC<{ text: string }> = ({ text }) => {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-        padding: '0 60px',
+        padding: '0 80px',
       }}
     >
-      <div
+      <p
         style={{
+          color: 'white',
+          fontSize,
+          fontWeight: 700,
+          textAlign: 'center',
+          lineHeight: 1.6,
+          margin: 0,
+          fontFamily: FONT_FAMILY,
           opacity,
           transform: `translateY(${translateY}px)`,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)',
-          padding: '24px 48px',
-          borderRadius: 16,
+          textShadow: '0 2px 20px rgba(0,0,0,0.8)',
         }}
       >
-        <p
-          style={{
-            color: 'white',
-            fontSize: 56,
-            fontWeight: 700,
-            textAlign: 'center',
-            lineHeight: 1.5,
-            margin: 0,
-            fontFamily: FONT_FAMILY,
-          }}
-        >
-          {text}
-        </p>
-      </div>
+        {text}
+      </p>
     </AbsoluteFill>
   );
 };
@@ -66,65 +61,32 @@ export interface ShortVideoProps {
 }
 
 export const ShortVideo: React.FC<ShortVideoProps> = ({
-  title,
   screenTexts,
   durationInSeconds,
 }) => {
   const { fps } = useVideoConfig();
-  const frame = useCurrentFrame();
 
   const totalFrames = durationInSeconds * fps;
-  const titleDuration = Math.min(fps * 3, totalFrames);
-  const remainingFrames = totalFrames - titleDuration;
-  const textsToShow = screenTexts.length > 0 ? screenTexts : [title];
-  const framesPerText = Math.max(1, Math.floor(remainingFrames / textsToShow.length));
-
-  const titleOpacity = interpolate(frame, [0, 20], [0, 1], {
-    extrapolateRight: 'clamp',
-  });
-
-  const titleScale = spring({
-    frame,
-    fps,
-    config: { damping: 12, stiffness: 200 },
-  });
+  const texts = screenTexts.filter(t => t.trim().length > 0);
+  const framesPerText = Math.max(1, Math.floor(totalFrames / Math.max(1, texts.length)));
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#000' }}>
-      <Sequence from={0} durationInFrames={titleDuration}>
-        <AbsoluteFill
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '0 80px',
-          }}
-        >
-          <h1
-            style={{
-              color: 'white',
-              fontSize: 76,
-              fontWeight: 900,
-              textAlign: 'center',
-              opacity: titleOpacity,
-              transform: `scale(${titleScale})`,
-              lineHeight: 1.3,
-              fontFamily: FONT_FAMILY,
-            }}
-          >
-            {title}
-          </h1>
-        </AbsoluteFill>
-      </Sequence>
+      {texts.map((text, index) => {
+        const isFirst = index === 0;
+        const isLast = index === texts.length - 1;
+        const size = isFirst || isLast ? 58 : 52;
 
-      {textsToShow.map((text, index) => (
-        <Sequence
-          key={index}
-          from={titleDuration + index * framesPerText}
-          durationInFrames={framesPerText}
-        >
-          <AnimatedSubtitle text={text} />
-        </Sequence>
-      ))}
+        return (
+          <Sequence
+            key={index}
+            from={index * framesPerText}
+            durationInFrames={framesPerText}
+          >
+            <FadeInText text={text} fontSize={size} />
+          </Sequence>
+        );
+      })}
     </AbsoluteFill>
   );
 };

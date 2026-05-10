@@ -23,7 +23,7 @@ export function InputForm({ onSubmit, loading }: Props) {
     message: '',
     innerVoice: '',
     targetAudience: '',
-    videoMood: 'funny',
+    videoMood: 'emotional',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,69 +35,69 @@ export function InputForm({ onSubmit, loading }: Props) {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 bg-gray-900 p-4 sm:p-6 rounded-2xl border border-gray-800">
-      <h2 className="text-lg sm:text-xl font-bold">動画の内容を入力</h2>
+  const filled = form.theme && form.message && form.innerVoice && form.targetAudience;
 
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 bg-gray-900 p-4 sm:p-6 rounded-2xl border border-gray-800">
       <div>
-        <label className="block text-sm text-gray-400 mb-1">テーマ・話したいこと</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1.5">何について話す？</label>
         <textarea
           value={form.theme}
           onChange={e => update('theme', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-          placeholder="例：最近やっと自分の弱さを認められた"
+          className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3.5 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+          placeholder="最近やっと自分の弱さを認められた"
           rows={2}
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm text-gray-400 mb-1">一番伝えたいこと</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1.5">伝えたいメッセージ</label>
         <textarea
           value={form.message}
           onChange={e => update('message', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-          placeholder="例：完璧じゃなくていい"
+          className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3.5 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+          placeholder="完璧じゃなくていい"
           rows={2}
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm text-gray-400 mb-1">本音・裏側の気持ち</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1.5">本音</label>
         <textarea
           value={form.innerVoice}
           onChange={e => update('innerVoice', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
-          placeholder="例：ほんとは怖かったし、まだ不安"
+          className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3.5 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+          placeholder="ほんとは怖かったし、まだ不安"
           rows={2}
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm text-gray-400 mb-1">届けたい相手</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1.5">誰に届けたい？</label>
         <input
           type="text"
           value={form.targetAudience}
           onChange={e => update('targetAudience', e.target.value)}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
-          placeholder="例：同じことで悩んでる人"
+          className="w-full bg-gray-800 border border-gray-700 rounded-xl p-3.5 text-base text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+          placeholder="同じことで悩んでる人"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm text-gray-400 mb-2">動画の雰囲気</label>
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">雰囲気</label>
+        <div className="grid grid-cols-3 gap-1.5">
           {moods.map(mood => (
             <button
               key={mood.value}
               type="button"
               onClick={() => update('videoMood', mood.value)}
-              className={`p-2.5 sm:p-3 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+              className={`py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
                 form.videoMood === mood.value
-                  ? 'bg-purple-600 text-white ring-2 ring-purple-400'
+                  ? 'bg-purple-600 text-white ring-2 ring-purple-400 ring-offset-1 ring-offset-gray-900'
                   : 'bg-gray-800 text-gray-400 active:bg-gray-600 border border-gray-700'
               }`}
             >
@@ -109,10 +109,17 @@ export function InputForm({ onSubmit, loading }: Props) {
 
       <button
         type="submit"
-        disabled={loading}
-        className="w-full bg-purple-600 hover:bg-purple-500 active:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-colors text-base sm:text-lg"
+        disabled={loading || !filled}
+        className="w-full bg-purple-600 hover:bg-purple-500 active:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-colors text-base"
       >
-        {loading ? '生成中...' : 'AI台本を生成する'}
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            生成中…
+          </span>
+        ) : (
+          'AI台本を生成する'
+        )}
       </button>
     </form>
   );
