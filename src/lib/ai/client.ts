@@ -1,18 +1,15 @@
-import { UserInput, GeneratedScript } from '@/types';
+import type { UserInput, GeneratedScript } from '@/types';
 import { generateScriptMock } from './mock';
+import { generateWithClaude } from './claude';
 
-export type AIProvider = 'mock' | 'openai' | 'claude';
-
-const provider: AIProvider = (process.env.AI_PROVIDER as AIProvider) || 'mock';
+export type AIProvider = 'mock' | 'claude';
 
 export async function generateScript(input: UserInput): Promise<GeneratedScript> {
+  const provider: AIProvider = process.env.ANTHROPIC_API_KEY ? 'claude' : 'mock';
+
   switch (provider) {
-    case 'openai':
-      // TODO: import { generateWithOpenAI } from './openai'
-      throw new Error('OpenAI provider not yet implemented. Set AI_PROVIDER=mock');
     case 'claude':
-      // TODO: import { generateWithClaude } from './claude'
-      throw new Error('Claude provider not yet implemented. Set AI_PROVIDER=mock');
+      return generateWithClaude(input);
     case 'mock':
     default:
       return generateScriptMock(input);
