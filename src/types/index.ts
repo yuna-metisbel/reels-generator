@@ -1,9 +1,9 @@
 export type VideoMood = 'funny' | 'emotional' | 'cool' | 'dark' | 'cute' | 'serious';
 
 export interface UserInput {
-  whatHappened: string;
-  myReaction: string;
-  actuallyScary: string;
+  theme: string;
+  message: string;
+  innerVoice: string;
   targetAudience: string;
   videoMood: VideoMood;
 }

@@ -39,15 +39,15 @@ export function VideoPreview({ title, screenTexts, duration, onDurationChange }:
   };
 
   return (
-    <div className="bg-gray-900 p-6 rounded-2xl border border-gray-800 space-y-4">
-      <h2 className="text-xl font-bold">プレビュー</h2>
+    <div className="bg-gray-900 p-4 sm:p-6 rounded-2xl border border-gray-800 space-y-4">
+      <h2 className="text-lg sm:text-xl font-bold">プレビュー</h2>
 
       <div className="flex gap-2">
         {([15, 30] as const).map(d => (
           <button
             key={d}
             onClick={() => onDurationChange(d)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
               duration === d
                 ? 'bg-purple-600 text-white'
                 : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'
@@ -58,8 +58,8 @@ export function VideoPreview({ title, screenTexts, duration, onDurationChange }:
         ))}
       </div>
 
-      <div className="flex justify-center bg-gray-800 rounded-xl p-4">
-        <div style={{ width: 270, height: 480 }}>
+      <div className="flex justify-center bg-gray-800 rounded-xl p-3 sm:p-4">
+        <div className="w-full max-w-[240px] sm:max-w-[270px] aspect-[9/16]">
           <Player
             component={ShortVideo}
             inputProps={{ title, screenTexts, durationInSeconds: duration }}
@@ -78,18 +78,18 @@ export function VideoPreview({ title, screenTexts, duration, onDurationChange }:
       <button
         onClick={handleRender}
         disabled={rendering}
-        className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors"
+        className="w-full bg-green-600 hover:bg-green-500 active:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 rounded-xl transition-colors text-base"
       >
-        {rendering ? 'レンダリング中...(数十秒かかります)' : 'MP4をダウンロード'}
+        {rendering ? 'レンダリング中...' : 'MP4をダウンロード'}
       </button>
 
       {downloadUrl && (
         <a
           href={downloadUrl}
           download
-          className="block text-center text-green-400 hover:text-green-300 underline py-2"
+          className="block text-center text-green-400 hover:text-green-300 underline py-2 text-base"
         >
-          ダウンロード準備完了 - クリックして保存
+          ダウンロード準備完了 - タップして保存
         </a>
       )}
 
