@@ -3,17 +3,19 @@
 import { Player } from '@remotion/player';
 import { ShortVideo } from '@/remotion/ShortVideo';
 import { useState } from 'react';
+import type { VideoMood } from '@/types';
 
 interface Props {
   title: string;
   screenTexts: string[];
   duration: 15 | 30;
   onDurationChange: (d: 15 | 30) => void;
+  mood?: VideoMood;
 }
 
 const FPS = 30;
 
-export function VideoPreview({ title, screenTexts, duration, onDurationChange }: Props) {
+export function VideoPreview({ title, screenTexts, duration, onDurationChange, mood }: Props) {
   const [rendering, setRendering] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -62,7 +64,7 @@ export function VideoPreview({ title, screenTexts, duration, onDurationChange }:
         <div className="w-full max-w-[240px] sm:max-w-[270px] aspect-[9/16]">
           <Player
             component={ShortVideo}
-            inputProps={{ title, screenTexts, durationInSeconds: duration }}
+            inputProps={{ title, screenTexts, durationInSeconds: duration, mood }}
             durationInFrames={duration * FPS}
             fps={FPS}
             compositionWidth={1080}

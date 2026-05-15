@@ -5,7 +5,7 @@ import { useAuth, SignUpButton } from '@clerk/nextjs';
 import dynamic from 'next/dynamic';
 import { InputForm } from '@/components/InputForm';
 import { ScriptResult } from '@/components/ScriptResult';
-import type { UserInput, GeneratedScript } from '@/types';
+import type { UserInput, GeneratedScript, VideoMood } from '@/types';
 
 const VideoPreview = dynamic(
   () => import('@/components/VideoPreview').then(mod => mod.VideoPreview),
@@ -58,9 +58,11 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [duration, setDuration] = useState<15 | 30>(15);
   const [activeTab, setActiveTab] = useState<'script' | 'preview'>('script');
+  const [mood, setMood] = useState<VideoMood>('emotional');
   const resultRef = useRef<HTMLDivElement>(null);
 
   const handleGenerate = async (input: UserInput) => {
+    setMood(input.videoMood);
     setLoading(true);
     setError(null);
     try {
@@ -161,6 +163,7 @@ export default function Home() {
                     screenTexts={script.screenTexts}
                     duration={duration}
                     onDurationChange={setDuration}
+                    mood={mood}
                   />
                 </div>
               </>

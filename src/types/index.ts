@@ -18,6 +18,7 @@ export interface ShortVideoProps {
   title: string;
   screenTexts: string[];
   durationInSeconds: number;
+  mood?: VideoMood;
 }
 
 export interface GenerationRecord {
