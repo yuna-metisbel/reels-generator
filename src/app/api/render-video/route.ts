@@ -3,6 +3,8 @@ import { renderMedia, selectComposition } from '@remotion/renderer';
 import { NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
+import { requireAuth } from '@/lib/auth';
+import { canDownloadVideo } from '@/lib/plans';
 
 export const maxDuration = 300;
 
@@ -18,6 +20,15 @@ async function ensureBundled(): Promise<string> {
 
 export async function POST(request: Request) {
   try {
+    const user = await requireAuth();
+
+    if (!canDownloadVideo(user.plan)) {
+      return NextResponse.json(
+        { error: '動画ダウンロードはProプラン限定です。' },
+        { status: 403 }
+      );
+    }
+
     const { title, screenTexts, duration } = await request.json();
 
     const serveUrl = await ensureBundled();
@@ -45,6 +56,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: `/renders/${fileName}` });
   } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'ログインが必要です' }, { status: 401 });
+    }
     console.error('Render error:', error);
     const message = error instanceof Error ? error.message : 'Rendering failed';
     return NextResponse.json({ error: message }, { status: 500 });
