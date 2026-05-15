@@ -21,18 +21,27 @@ function LandingHero() {
   return (
     <div className="text-center py-16 sm:py-24 px-4">
       <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
-        AIでリール台本を
+        AIでリール台本&動画を
         <br />
         <span className="text-purple-400">秒速で生成</span>
       </h1>
       <p className="text-gray-400 text-base sm:text-lg mb-8 max-w-md mx-auto">
         テーマと伝えたいことを入力するだけ。
         <br />
-        15秒・30秒の台本、投稿文、ハッシュタグを自動生成。
+        台本・投稿文・ハッシュタグ・ショート動画を自動生成。
       </p>
+
+      <div className="flex flex-wrap justify-center gap-3 mb-8 max-w-sm mx-auto">
+        {['台本生成', '投稿文', 'ハッシュタグ', '動画プレビュー', 'MP4書き出し'].map((feature) => (
+          <span key={feature} className="bg-gray-800 border border-gray-700 text-gray-300 text-xs px-3 py-1.5 rounded-full">
+            {feature}
+          </span>
+        ))}
+      </div>
+
       <SignUpButton mode="modal">
         <button className="bg-purple-600 hover:bg-purple-500 text-white font-bold text-lg px-8 py-4 rounded-xl transition-colors">
-          無料で台本を作る
+          無料で始める
         </button>
       </SignUpButton>
       <p className="text-gray-500 text-sm mt-3">
