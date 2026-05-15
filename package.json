@@ -28,7 +28,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "remotion": "^4.0.250",
-    "stripe": "^22.1.1"
+    "stripe": "^22.1.1",
+    "svix": "^1.93.0"
   },
   "devDependencies": {
     "@types/node": "^22.19.19",
