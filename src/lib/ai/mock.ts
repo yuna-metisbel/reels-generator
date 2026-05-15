@@ -33,49 +33,24 @@ export async function generateScriptMock(input: UserInput): Promise<GeneratedScr
   ];
   const closing = closings[Math.floor(Math.random() * closings.length)];
 
-  const title = `${hook.slice(0, 15)}${input.theme.slice(0, 15)}`;
+  const themeShort = input.theme.length > 20 ? input.theme.slice(0, 20) + '…' : input.theme;
+  const title = `${hook.slice(0, 15)}${themeShort}`;
 
   return {
     title,
-    script15s: [
-      hook,
-      ``,
-      input.theme,
-      `→「${input.message}」`,
-      ``,
-      closing,
-    ].join('\n'),
+    script15s: [hook, ``, input.theme, ``, closing].join('\n'),
     script30s: [
       hook,
       ``,
       input.theme,
       ``,
       `ずっと思ってたけど、`,
-      `${input.message}`,
-      ``,
-      `…でも正直`,
-      `${input.innerVoice}`,
-      ``,
-      `${input.targetAudience}に届いてほしい。`,
+      `それでいいんだって気づいた。`,
       ``,
       closing,
     ].join('\n'),
-    screenTexts: [
-      hook,
-      input.theme.length > 20 ? input.theme.slice(0, 20) + '…' : input.theme,
-      input.message.length > 20 ? input.message.slice(0, 20) + '…' : input.message,
-      input.innerVoice.length > 18 ? input.innerVoice.slice(0, 18) + '…' : input.innerVoice,
-      closing,
-    ],
-    caption: [
-      hook,
-      ``,
-      input.theme,
-      ``,
-      `${input.message}`,
-      ``,
-      `#${mood} #内省 #本音`,
-    ].join('\n'),
+    screenTexts: [hook, themeShort, `それでいい。`, closing],
+    caption: [hook, ``, input.theme, ``, `#${mood} #内省 #本音`].join('\n'),
     hashtags: [
       `#${mood}`,
       '#本音',
