@@ -3,6 +3,11 @@ import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
 import type Stripe from 'stripe';
 
+function getPeriodEnd(subscription: Stripe.Subscription): Date {
+  const item = subscription.items.data[0];
+  return new Date(item.current_period_end * 1000);
+}
+
 export async function POST(request: Request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
@@ -32,6 +37,7 @@ export async function POST(request: Request) {
       const customerId = session.customer as string;
 
       const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+      const periodEnd = getPeriodEnd(subscription);
 
       await prisma.$transaction([
         prisma.user.update({
@@ -48,13 +54,13 @@ export async function POST(request: Request) {
             stripeSubscriptionId: subscriptionId,
             status: subscription.status,
             plan: 'pro',
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            currentPeriodEnd: periodEnd,
           },
           update: {
             stripeSubscriptionId: subscriptionId,
             status: subscription.status,
             plan: 'pro',
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            currentPeriodEnd: periodEnd,
           },
         }),
       ]);
@@ -69,13 +75,14 @@ export async function POST(request: Request) {
       if (!dbSubscription) break;
 
       const isActive = subscription.status === 'active';
+      const periodEnd = getPeriodEnd(subscription);
 
       await prisma.$transaction([
         prisma.subscription.update({
           where: { stripeSubscriptionId: subscription.id },
           data: {
             status: subscription.status,
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+            currentPeriodEnd: periodEnd,
           },
         }),
         prisma.user.update({
