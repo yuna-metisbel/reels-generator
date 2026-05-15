@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                      String         @id @default(uuid()) @db.Uuid
+  clerkId                 String         @unique @map("clerk_id")
+  email                   String
+  plan                    String         @default("free")
+  stripeCustomerId        String?        @map("stripe_customer_id")
+  monthlyGenerationCount  Int            @default(0) @map("monthly_generation_count")
+  createdAt               DateTime       @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt               DateTime       @updatedAt @map("updated_at") @db.Timestamptz
+
+  generations   Generation[]
+  subscription  Subscription?
+
+  @@map("users")
+}
+
+model Generation {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  input      Json
+  result     Json
+  isFavorite Boolean  @default(false) @map("is_favorite")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("generations")
+}
+
+model Subscription {
+  id                   String   @id @default(uuid()) @db.Uuid
+  userId               String   @unique @map("user_id") @db.Uuid
+  stripeSubscriptionId String   @unique @map("stripe_subscription_id")
+  status               String
+  plan                 String
+  currentPeriodEnd     DateTime @map("current_period_end") @db.Timestamptz
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("subscriptions")
+}
