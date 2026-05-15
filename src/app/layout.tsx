@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs';
+import { jaJP } from '@clerk/localizations';
+import { UserNav } from '@/components/UserNav';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -12,8 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja">
-      <body className="bg-gray-950 text-white">{children}</body>
-    </html>
+    <ClerkProvider localization={jaJP}>
+      <html lang="ja">
+        <body className="bg-gray-950 text-white">
+          <UserNav />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
