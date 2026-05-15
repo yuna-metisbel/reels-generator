@@ -22,3 +22,11 @@ export interface ShortVideoProps {
   screenTexts: string[];
   durationInSeconds: number;
 }
+
+export interface GenerationRecord {
+  id: string;
+  input: UserInput;
+  result: GeneratedScript;
+  isFavorite: boolean;
+  createdAt: string;
+}
