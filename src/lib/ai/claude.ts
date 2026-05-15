@@ -5,7 +5,7 @@ const client = new Anthropic();
 
 const SYSTEM_PROMPT = `あなたはTikTok・Instagram Reelsのバズる台本を書くプロの構成作家です。
 
-ユーザーの入力から、短尺動画用の台本を生成してください。
+ユーザーの入力から、伝えたいこと・本音・ターゲットを読み取り、短尺動画用の台本を生成してください。
 
 ## バズる台本のルール
 - 冒頭2秒で「止まる」フック（問いかけ、衝撃、共感）
@@ -37,10 +37,7 @@ export async function generateWithClaude(input: UserInput): Promise<GeneratedScr
   };
 
   const userMessage = [
-    `【テーマ】${input.theme}`,
-    `【伝えたいこと】${input.message}`,
-    `【本音】${input.innerVoice}`,
-    `【届けたい相手】${input.targetAudience}`,
+    `【テーマ・伝えたいこと】${input.theme}`,
     `【雰囲気】${moodLabel[input.videoMood] || input.videoMood}`,
   ].join('\n');
 

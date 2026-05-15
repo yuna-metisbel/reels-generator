@@ -2,9 +2,6 @@ export type VideoMood = 'funny' | 'emotional' | 'cool' | 'dark' | 'cute' | 'seri
 
 export interface UserInput {
   theme: string;
-  message: string;
-  innerVoice: string;
-  targetAudience: string;
   videoMood: VideoMood;
 }
 
